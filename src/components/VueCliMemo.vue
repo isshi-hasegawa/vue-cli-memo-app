@@ -33,7 +33,7 @@ export default {
     }
   },
   mounted () {
-    this.memos = JSON.parse(localStorage.getItem('memos')) || [];
+    this.memos = JSON.parse(localStorage.getItem('memos')) || []
   },
   methods: {
     displayForm(index){
