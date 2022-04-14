@@ -1,17 +1,18 @@
 <template>
   <div>
     <ul>
-      <li v-for="memo in memos" :key="memo">
+      <li v-for="(memo, index) in memos" :key="memo" @click="displayForm(index)">
         <span>{{ memo.split('\n')[0] }}</span>
       </li>
     </ul>
 
     <div @click="displayForm">＋</div>
-    <div v-if="isAddable">
+    <div v-if="isAddable || isEditable">
       <textarea v-model="newMemo"></textarea>
       <div>
-        <button @click="addMemo">Add</button>
-        <button @click="cancel">Cancel</button>
+        <button v-if="isAddable && !isEditable" @click="addMemo">Add</button>
+        <button v-if="!isAddable && isEditable" @click="updateMemo">Update</button>
+        <button @click="clearMemo">Cancel</button>
       </div>
     </div>
   </div>
@@ -24,26 +25,43 @@ export default {
       newMemo: '',
       memos: [],
       isAddable: false,
+      isEditable: false,
+      editingMemoIndex: '',
     }
   },
   mounted () {
     this.memos = JSON.parse(localStorage.getItem('memos')) || [];
   },
   methods: {
-    displayForm(){
-      this.isAddable = true
-      this.newMemo = ''
+    displayForm(index){
+      if(!isNaN(index)){
+        this.isAddable = false
+        this.isEditable = true
+        this.newMemo = this.memos[index]
+        this.editingMemoIndex = index
+      } else {
+        this.isAddable = true
+        this.isEditable = false
+        this.newMemo = ''
+      }
     },
     addMemo () {
+      if (this.newMemo === '') return
       this.memos.push(this.newMemo)
+      this.saveMemo()
+    },
+    updateMemo (){
+      if (this.newMemo === '') return
+      this.memos.splice(this.editingMemoIndex, 1, this.newMemo)
       this.saveMemo()
     },
     saveMemo () {
       localStorage.setItem('memos', JSON.stringify(this.memos))
-      this.cancel()
+      this.clearMemo()
     },
-    cancel () {
+    clearMemo () {
       this.isAddable = false
+      this.isEditable = false
       this.newMemo = ''
     }
   },
