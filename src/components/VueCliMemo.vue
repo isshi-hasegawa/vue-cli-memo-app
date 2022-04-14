@@ -11,7 +11,10 @@
       <textarea v-model="newMemo"></textarea>
       <div>
         <button v-if="isAddable && !isEditable" @click="addMemo">Add</button>
-        <button v-if="!isAddable && isEditable" @click="updateMemo">Update</button>
+        <span v-if="!isAddable && isEditable">
+          <button @click="updateMemo">Update</button>
+          <button @click="deleteMemo">Delete</button>
+        </span>
         <button @click="clearMemo">Cancel</button>
       </div>
     </div>
@@ -53,6 +56,10 @@ export default {
     updateMemo (){
       if (this.newMemo === '') return
       this.memos.splice(this.editingMemoIndex, 1, this.newMemo)
+      this.saveMemo()
+    },
+    deleteMemo (){
+      this.memos.splice(this.editingMemoIndex, 1)
       this.saveMemo()
     },
     saveMemo () {
