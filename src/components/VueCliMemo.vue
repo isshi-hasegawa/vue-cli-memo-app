@@ -29,7 +29,7 @@ export default {
       memos: [],
       isAddable: false,
       isEditable: false,
-      editingMemoIndex: '',
+      editingMemoIndex: undefined,
     }
   },
   mounted () {
