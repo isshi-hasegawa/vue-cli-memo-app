@@ -7,7 +7,7 @@
     </ul>
 
     <div @click="displayForm">＋</div>
-    <div v-if="formFlags !== 0">
+    <div v-if="formFlags === 1 || formFlags === 2">
       <textarea v-model="newMemo"></textarea>
       <div>
         <button v-if="formFlags === 1" @click="addMemo">Add</button>
