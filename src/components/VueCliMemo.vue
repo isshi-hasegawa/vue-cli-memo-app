@@ -7,11 +7,11 @@
     </ul>
 
     <div @click="displayForm">＋</div>
-    <div v-if="isAddable || isEditable">
+    <div v-if="formFlags !== 0">
       <textarea v-model="newMemo"></textarea>
       <div>
-        <button v-if="isAddable && !isEditable" @click="addMemo">Add</button>
-        <span v-if="!isAddable && isEditable">
+        <button v-if="formFlags === 1" @click="addMemo">Add</button>
+        <span v-if="formFlags === 2">
           <button @click="updateMemo">Update</button>
           <button @click="deleteMemo">Delete</button>
         </span>
@@ -22,13 +22,15 @@
 </template>
 
 <script>
+const ADDING = 1
+const EDITING = 2
+
 export default {
   data () {
     return {
       newMemo: '',
       memos: [],
-      isAddable: false,
-      isEditable: false,
+      formFlags: 0,
       editingMemoIndex: undefined,
     }
   },
@@ -38,13 +40,11 @@ export default {
   methods: {
     displayForm(index){
       if(!isNaN(index)){
-        this.isAddable = false
-        this.isEditable = true
+        this.formFlags = EDITING
         this.newMemo = this.memos[index].content
         this.editingMemoIndex = index
       } else {
-        this.isAddable = true
-        this.isEditable = false
+        this.formFlags = ADDING
         this.newMemo = ''
       }
     },
@@ -72,8 +72,7 @@ export default {
       this.clearMemo()
     },
     clearMemo () {
-      this.isAddable = false
-      this.isEditable = false
+      this.formFlags = 0
       this.newMemo = ''
     }
   },
