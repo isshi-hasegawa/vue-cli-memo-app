@@ -1,8 +1,8 @@
 <template>
   <div>
     <ul>
-      <li v-for="(memo, index) in memos" :key="memo" @click="displayForm(index)">
-        <span>{{ memo.split('\n')[0] }}</span>
+      <li v-for="(memo, index) in memos" :key="memo.id" @click="displayForm(index)">
+        <span>{{ memo.content.split('\n')[0] }}</span>
       </li>
     </ul>
 
@@ -40,7 +40,7 @@ export default {
       if(!isNaN(index)){
         this.isAddable = false
         this.isEditable = true
-        this.newMemo = this.memos[index]
+        this.newMemo = this.memos[index].content
         this.editingMemoIndex = index
       } else {
         this.isAddable = true
@@ -50,12 +50,17 @@ export default {
     },
     addMemo () {
       if (this.newMemo === '') return
-      this.memos.push(this.newMemo)
+      const uuid = new Date().getTime().toString(16) + Math.floor(Math.random()).toString(16)
+      const memo = {
+        id: uuid,
+        content: this.newMemo,
+      }
+      this.memos.push(memo)
       this.saveMemo()
     },
     updateMemo (){
       if (this.newMemo === '') return
-      this.memos.splice(this.editingMemoIndex, 1, this.newMemo)
+      this.memos[this.editingMemoIndex].content = this.newMemo
       this.saveMemo()
     },
     deleteMemo (){
